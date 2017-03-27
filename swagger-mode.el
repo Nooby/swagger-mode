@@ -128,7 +128,7 @@
 
   (if (bound-and-true-p swagger-mode)
 	  (add-hook 'after-save-hook 'swagger-after-save-handler nil t)
-	(remove-hook 'after-save-hook 'swagger-after-save-handler nil t)))
+	(remove-hook 'after-save-hook 'swagger-after-save-handler t)))
 
 (provide 'swagger-mode)
 ;;; swagger-mode.el ends here
