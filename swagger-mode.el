@@ -72,16 +72,14 @@
 ;;; Funcs
 (defun swagger--compile (path lang out)
   "Compile PATH with the LANG template to path OUT."
-  (kill-buffer "*swagger-compile*")
-  (let* ((name "compile")
-         (buffer "*swagger-compile*")
-         (arguments (format swagger-command-template path lang out))
-         (return (call-process swagger-codegen-cli nil buffer t arguments)))
-    (if (not (eq return 0))
-        (progn
-          (pop-to-buffer (get-buffer buffer))
-          (compilation-mode)))
-    return))
+  (let ((buffer "*swagger-compile*")
+        (arguments (format swagger-command-template path lang out)))
+    (when (get-buffer buffer)
+      (kill-buffer buffer))
+    (let ((return (call-process swagger-codegen-cli nil buffer t arguments)))
+      (if (not (eq return 0))
+          (pop-to-buffer (get-buffer buffer)))
+      return)))
 
 (defun swagger-compile (lang)
   "Compile Swagger File with template LANG."
