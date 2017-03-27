@@ -89,7 +89,7 @@
   (unless lang (setq lang swagger-preview-lang))
   (swagger--compile (buffer-file-name) lang swagger-out-path))
 
-(defun swagger-compile-shortcut ()
+(defun swagger-export ()
   "Compile Swagger file with standard settings."
   (interactive)
   (swagger--compile (buffer-file-name)
@@ -113,15 +113,15 @@
                       swagger-preview-lang
                       swagger-out-preview-path)))
 
-
 ;;; Mode Setup
 ;;;###autoload
 (define-minor-mode swagger-mode
   "Minor mode for Swagger Codegen"
   :lighter " swagger"
   :keymap (let ((map (make-sparse-keymap)))
-            (define-key map (kbd "C-c c") 'swagger-compile-shortcut)
-            (define-key map (kbd "C-c v") 'swagger-preview)
+            (define-key map (kbd "M-s c") 'swagger-compile)
+            (define-key map (kbd "M-s e") 'swagger-export)
+            (define-key map (kbd "M-s p") 'swagger-preview)
             map)
 
   (unless swagger-out-preview-path
