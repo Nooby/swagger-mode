@@ -127,8 +127,8 @@
 		  (make-temp-file "swagger" t)))
 
   (if (bound-and-true-p swagger-mode)
-	  (add-hook 'after-save-hook 'swagger-after-save-handler)
-	(remove-hook 'after-save-hook 'swagger-after-save-handler)))
+	  (add-hook 'after-save-hook 'swagger-after-save-handler nil t)
+	(remove-hook 'after-save-hook 'swagger-after-save-handler nil t)))
 
 (provide 'swagger-mode)
 ;;; swagger-mode.el ends here
