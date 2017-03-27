@@ -74,14 +74,14 @@
   "Compile PATH with the LANG template to path OUT."
   (kill-buffer "*swagger-compile*")
   (let* ((name "compile")
-		(buffer "*swagger-compile*")
-		(arguments (format swagger-command-template path lang out))
-		(return (call-process swagger-codegen-cli nil buffer t arguments)))
-	(if (not (eq return 0))
-		(progn
-		  (pop-to-buffer (get-buffer buffer))
-		  (compilation-mode)))
-	return))
+         (buffer "*swagger-compile*")
+         (arguments (format swagger-command-template path lang out))
+         (return (call-process swagger-codegen-cli nil buffer t arguments)))
+    (if (not (eq return 0))
+        (progn
+          (pop-to-buffer (get-buffer buffer))
+          (compilation-mode)))
+    return))
 
 (defun swagger-compile (lang)
   "Compile Swagger File with template LANG."
@@ -92,24 +92,26 @@
 (defun swagger-compile-shortcut ()
   "Compile Swagger file with standard settings."
   (interactive)
-  (swagger--compile (buffer-file-name) swagger-compile-lang swagger-out-path))
+  (swagger--compile (buffer-file-name)
+                    swagger-compile-lang
+                    swagger-out-path))
 
 (defun swagger-preview ()
   "Preview Swagger file in default browser."
   (interactive)
   (let* ((ret (swagger--compile (buffer-file-name)
-								swagger-preview-lang
-								swagger-out-preview-path))
-		 (file_url (concat "file://" swagger-out-preview-path "/index.html")))
-	(if (eq ret 0)
-		(browse-url file_url))))
+                                swagger-preview-lang
+                                swagger-out-preview-path))
+         (file_url (concat "file://" swagger-out-preview-path "/index.html")))
+    (if (eq ret 0)
+        (browse-url file_url))))
 
 (defun swagger-after-save-handler ()
   "Used in 'after-save-hook'."
   (when (bound-and-true-p swagger-mode)
-	(let ((ret (swagger--compile (buffer-file-name)
-								 swagger-preview-lang
-								 swagger-out-preview-path))))))
+    (swagger--compile (buffer-file-name)
+                      swagger-preview-lang
+                      swagger-out-preview-path)))
 
 
 ;;; Mode Setup
@@ -118,17 +120,17 @@
   "Minor mode for Swagger Codegen"
   :lighter " swagger"
   :keymap (let ((map (make-sparse-keymap)))
-			(define-key map (kbd "C-c c") 'swagger-compile-shortcut)
-			(define-key map (kbd "C-c v") 'swagger-preview)
-			map)
+            (define-key map (kbd "C-c c") 'swagger-compile-shortcut)
+            (define-key map (kbd "C-c v") 'swagger-preview)
+            map)
 
   (unless swagger-out-preview-path
-	(setq swagger-out-preview-path
-		  (make-temp-file "swagger" t)))
+    (setq swagger-out-preview-path
+          (make-temp-file "swagger" t)))
 
   (if (bound-and-true-p swagger-mode)
-	  (add-hook 'after-save-hook 'swagger-after-save-handler nil t)
-	(remove-hook 'after-save-hook 'swagger-after-save-handler t)))
+      (add-hook 'after-save-hook 'swagger-after-save-handler nil t)
+    (remove-hook 'after-save-hook 'swagger-after-save-handler t)))
 
 (provide 'swagger-mode)
 ;;; swagger-mode.el ends here
